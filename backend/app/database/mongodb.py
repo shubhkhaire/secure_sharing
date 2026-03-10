@@ -1,5 +1,5 @@
 import os
-from pymongo import MongoClient
+from motor.motor_asyncio import AsyncIOMotorClient
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -7,7 +7,7 @@ load_dotenv()
 MONGO_URL = os.getenv("MONGODB_URL")
 DB_NAME = os.getenv("DB_NAME")
 
-client = MongoClient(MONGO_URL)
+client = AsyncIOMotorClient(MONGO_URL)
 
 db = client[DB_NAME]
 

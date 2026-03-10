@@ -7,8 +7,8 @@ from app.database.mongodb import users_collection
 router = APIRouter()
 
 @router.post("/register")
-def register_user(user: UserRegister):
-    existing_user = users_collection.find_one({"email": user.email})
+async def register_user(user: UserRegister):
+    existing_user = await users_collection.find_one({"email": user.email})
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already registered")
     hashed_password = hash_password(user.password)
@@ -18,13 +18,13 @@ def register_user(user: UserRegister):
         "password": hashed_password,
     }
     
-    users_collection.insert_one(user_data)
+    await users_collection.insert_one(user_data)
     return {"message": "User registered successfully"}
     
        
 @router.post("/login")
-def login_user(user:UserLogin):
-    db_user = users_collection.find_one({"email": user.email})
+async def login_user(user:UserLogin):
+    db_user = await users_collection.find_one({"email": user.email})
     if not db_user:
         raise HTTPException(status_code = 400, detail="Invalid email or password")
     if not verify_password(user.password, db_user["password"]):
